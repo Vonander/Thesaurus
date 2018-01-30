@@ -13,6 +13,7 @@
 		DF5B0F922020C0CA006A1287 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF5B0F912020C0CA006A1287 /* Assets.xcassets */; };
 		DF5B0F952020C0CA006A1287 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF5B0F932020C0CA006A1287 /* LaunchScreen.storyboard */; };
 		DF5B0F9E2020C85B006A1287 /* DataBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5B0F9D2020C85B006A1287 /* DataBase.swift */; };
+		DF5B0FA12020F572006A1287 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5B0FA02020F572006A1287 /* DetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		DF5B0F942020C0CA006A1287 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DF5B0F962020C0CA006A1287 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DF5B0F9D2020C85B006A1287 /* DataBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBase.swift; sourceTree = "<group>"; };
+		DF5B0FA02020F572006A1287 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,10 +58,11 @@
 		DF5B0F892020C0CA006A1287 /* Project_Thesaurus */ = {
 			isa = PBXGroup;
 			children = (
-				DF5B0F9C2020C7AE006A1287 /* Models */,
 				DF5B0F8A2020C0CA006A1287 /* AppDelegate.swift */,
-				DF5B0F8C2020C0CA006A1287 /* ViewController.swift */,
 				DF5B0F8E2020C0CA006A1287 /* Main.storyboard */,
+				DF5B0F9C2020C7AE006A1287 /* Models */,
+				DF5B0F9F2020F544006A1287 /* Views */,
+				DF5B0F8C2020C0CA006A1287 /* ViewController.swift */,
 				DF5B0F912020C0CA006A1287 /* Assets.xcassets */,
 				DF5B0F932020C0CA006A1287 /* LaunchScreen.storyboard */,
 				DF5B0F962020C0CA006A1287 /* Info.plist */,
@@ -73,6 +76,14 @@
 				DF5B0F9D2020C85B006A1287 /* DataBase.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		DF5B0F9F2020F544006A1287 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DF5B0FA02020F572006A1287 /* DetailView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,6 +159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF5B0F8D2020C0CA006A1287 /* ViewController.swift in Sources */,
+				DF5B0FA12020F572006A1287 /* DetailView.swift in Sources */,
 				DF5B0F9E2020C85B006A1287 /* DataBase.swift in Sources */,
 				DF5B0F8B2020C0CA006A1287 /* AppDelegate.swift in Sources */,
 			);

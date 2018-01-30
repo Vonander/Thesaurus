@@ -72,20 +72,30 @@
                     <connections>
                         <outlet property="searchBar" destination="zJG-TU-Ubr" id="awF-bC-5hQ"/>
                         <outlet property="tableView" destination="eq6-cg-S0W" id="jCr-3V-j5f"/>
+                        <segue destination="yxf-U0-PlW" kind="show" identifier="detailview" id="x7H-8H-v88"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="364" y="31.934032983508249"/>
         </scene>
-        <!--View Controller-->
+        <!--Detail View-->
         <scene sceneID="Ogj-q4-F4X">
             <objects>
-                <viewController id="yxf-U0-PlW" sceneMemberID="viewController">
+                <viewController id="yxf-U0-PlW" customClass="DetailView" customModule="Project_Thesaurus" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PKH-5n-2Od">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B5Y-q5-9RG">
+                                <rect key="frame" x="166" y="323" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="hxg-TJ-UBC"/>
                     </view>
                 </viewController>

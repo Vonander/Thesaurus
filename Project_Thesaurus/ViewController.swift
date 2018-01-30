@@ -71,6 +71,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(currentDictionary[indexPath.row])
+        performSegue(withIdentifier: "detailview", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "detailview") {
+            if let detailView = segue.destination as? DetailView {
+                detailView.label = "tjohoppsan hej"
+            }
+        }
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
