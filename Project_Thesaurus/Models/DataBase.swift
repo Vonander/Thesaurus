@@ -8,9 +8,14 @@
 
 import Foundation
 
+struct DictionaryItem {
+    var word: String
+    var synonyms: [String]
+}
+
 class DataModel {
     
-    var dictionary = [
+    var database = [
         [
             "word": "sten",
             "synonyms": [
@@ -30,5 +35,14 @@ class DataModel {
             ]
         ]
     ]
+    
+    func fetchData() -> [DictionaryItem]{
+        var dictionaryItems:[DictionaryItem] = []
+        for word in database {
+            let item:DictionaryItem = DictionaryItem(word: word["word"] as! String, synonyms: word["synonyms"] as! [String])
+            dictionaryItems.append(item)
+        }
+        return dictionaryItems
+    }
     
 }
