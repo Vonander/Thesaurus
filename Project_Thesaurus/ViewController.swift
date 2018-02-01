@@ -14,6 +14,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     @IBOutlet weak var tableView: UITableView!
     
     var currentDictionary:[DictionaryItem] = []
+    var currentWord:String = ""
+    var currentSynonyms:[String] = []
     
     
     
@@ -23,7 +25,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
-        navigationItem.leftBarButtonItem = editButtonItem
         fetchData()
     }
     
@@ -63,29 +64,39 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")
         cell?.textLabel?.text = currentDictionary[indexPath.row].word
         cell?.detailTextLabel?.text = ">"
+        cell?.selectionStyle = .none
         return cell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(currentDictionary[indexPath.row])
+        currentWord = currentDictionary[indexPath.row].word
+        currentSynonyms = currentDictionary[indexPath.row].synonyms
         performSegue(withIdentifier: "detailview", sender: self)
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let addAction = UIContextualAction(style: .normal, title:  "Add", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            print("OK, marked as Added")
+            success(true)
+        })
+        //closeAction.image = UIImage(named: "tick")
+        //closeAction.backgroundColor = .purple
+        
+        return UISwipeActionsConfiguration(actions: [addAction])
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "detailview") {
             if let detailView = segue.destination as? DetailView {
-                detailView.label = "tjohoppsan hej"
+                detailView.word = currentWord
+                detailView.synonyms = currentSynonyms
             }
         }
     }
-    
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        print(editing)
-    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
