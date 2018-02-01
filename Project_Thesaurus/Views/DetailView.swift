@@ -16,6 +16,7 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var word:String = ""
     var synonyms:[String] = []
     var currentIndex:Int = 0
+    var textAttributes:[NSAttributedStringKey : NSObject]?
     var updateDataBase: ((_ synonyms:[String]) -> ())?
 
     
@@ -23,8 +24,14 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        navigationItem.rightBarButtonItem = editButtonItem
         headLabel.text = "Synonyms for the word " + word + ":"
+        initNavigationBar()
+    }
+    
+    private func initNavigationBar(){
+        editButtonItem.setTitleTextAttributes(textAttributes, for: .normal)
+        editButtonItem.title = "+"
+        navigationItem.rightBarButtonItem = editButtonItem
     }
 
     
@@ -36,6 +43,8 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell")
+        cell?.textLabel?.textColor = UIColor(red:0.00, green:0.10, blue:0.57, alpha:1.0)
+        cell?.textLabel?.font = UIFont.systemFont(ofSize: 28, weight: UIFont.Weight.thin)
         cell?.textLabel?.text = synonyms[indexPath.row]
         cell?.detailTextLabel?.text = ""
         cell?.selectionStyle = .none

@@ -26,7 +26,7 @@
                                     <constraint firstAttribute="height" constant="43" id="TRF-DB-XwG"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="thin" pointSize="13"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" red="0.1858863831" green="0.2125177681" blue="0.45768344399999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CombiTech" translatesAutoresizingMaskIntoConstraints="NO" id="5ee-a9-emx">
