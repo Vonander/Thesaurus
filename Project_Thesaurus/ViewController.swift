@@ -51,7 +51,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let filteredDictionary = currentDictionary.filter { DictionaryItem -> Bool in
                 DictionaryItem.word.lowercased().contains(searchText.lowercased())
         }
-        //unfilteredDictionary = currentDictionary
         currentDictionary = filteredDictionary
         self.tableView.reloadData()
     }
