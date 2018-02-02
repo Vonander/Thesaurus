@@ -32,6 +32,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         initNavigationBar()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        searchBar.endEditing(true)
+        currentDictionary = unfilteredDictionary
+        searchBar.text = ""
+        tableView.reloadData()
+        
+    }
+    
     private func initNavigationBar(){
         editButtonItem.setTitleTextAttributes(textAttributes, for: .normal)
         editButtonItem.title = "+"
@@ -119,7 +127,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { (_) in
             if let field = alertController.textFields?[0] {
-                let item:DictionaryItem = DictionaryItem(word: field.text!, synonyms: ["< add - delete >"])
+                
+                
+                
+                
+                let uuid = NSUUID().uuidString.lowercased()
+                let item:DictionaryItem = DictionaryItem(word: field.text!, id: uuid, synonyms: ["< add - delete >"])
                 self.currentDictionary.append(item)
                 self.unfilteredDictionary = self.currentDictionary
                 self.tableView.reloadData()
