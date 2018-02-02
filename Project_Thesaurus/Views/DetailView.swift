@@ -13,18 +13,18 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var headLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
-    var word:String = ""
-    var synonyms:[String] = []
+    
+    var dictionaryItem = DictionaryItem(word: "", id: "", synonyms: [])
     var currentIndex:Int = 0
     var textAttributes:[NSAttributedStringKey : NSObject]?
-    var updateDataBase: ((_ synonyms:[String]) -> ())?
+    var updateDataBase: ((_ dictionaryItem:DictionaryItem) -> ())?
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        headLabel.text = "Synonyms for the word " + word + ":"
+        headLabel.text = "Synonyms for the word " + dictionaryItem.word + ":"
         initNavigationBar()
     }
     
@@ -38,14 +38,14 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // UITableView methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return synonyms.count
+        return dictionaryItem.synonyms.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell")
         cell?.textLabel?.textColor = UIColor(red:0.00, green:0.10, blue:0.57, alpha:1.0)
         cell?.textLabel?.font = UIFont.systemFont(ofSize: 28, weight: UIFont.Weight.thin)
-        cell?.textLabel?.text = synonyms[indexPath.row]
+        cell?.textLabel?.text = dictionaryItem.synonyms[indexPath.row]
         cell?.detailTextLabel?.text = ""
         cell?.selectionStyle = .none
         return cell!
@@ -53,7 +53,7 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let addAction = UIContextualAction(style: .normal, title:  "Add", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-            self.initAddAlert(title: "Add new synonym for " + self.word, message: "")
+            self.initAddAlert(title: "Add new synonym for " + self.dictionaryItem.word, message: "")
             success(true)
         })
         addAction.backgroundColor = .green
@@ -63,7 +63,7 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .normal, title:  "Delete", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
             self.currentIndex = indexPath.row
-            self.initDeleteAlert(synonym: self.synonyms[indexPath.row])
+            self.initDeleteAlert(synonym: self.dictionaryItem.synonyms[indexPath.row])
             success(true)
         })
         deleteAction.backgroundColor = .red
@@ -79,8 +79,8 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { (_) in
             if let field = alertController.textFields?[0] {
-                self.synonyms.append(field.text!)
-                self.updateDataBase?(self.synonyms)
+                self.dictionaryItem.synonyms.append(field.text!)
+                self.updateDataBase!(self.dictionaryItem)
                 self.tableView.reloadData()
             } else {
                 return
@@ -98,8 +98,9 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private func initDeleteAlert(synonym: String){
         let alert = UIAlertController(title: "Do you want to delete the synonym " + synonym + "?", message: "", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
-            self.synonyms = self.synonyms.filter() { $0 != self.synonyms[self.currentIndex]}
-            self.updateDataBase?(self.synonyms)
+            let synonyms = self.dictionaryItem.synonyms.filter() { $0 != self.dictionaryItem.synonyms[self.currentIndex]}
+            self.dictionaryItem.synonyms = synonyms
+            self.updateDataBase!(self.dictionaryItem)
             self.tableView.reloadData()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
@@ -111,7 +112,7 @@ class DetailView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     
     override func setEditing(_ editing: Bool, animated: Bool) {
-        initAddAlert(title: "Add new synonym for " + self.word, message: "")
+        initAddAlert(title: "Add new synonym for " + self.dictionaryItem.word, message: "")
     }
     
     override func didReceiveMemoryWarning() {

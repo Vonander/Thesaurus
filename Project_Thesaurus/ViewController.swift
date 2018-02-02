@@ -16,9 +16,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     let data:DataModel = DataModel()
     var unfilteredDictionary:[DictionaryItem] = []
     var currentDictionary:[DictionaryItem] = []
-    var currentWord:String = ""
-    var currentSynonyms:[String] = []
     var currentIndex:Int = 0
+    var searching:Bool = false
     let textAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 28, weight: UIFont.Weight.thin),NSAttributedStringKey.foregroundColor:UIColor(red:0.00, green:0.10, blue:0.57, alpha:1.0)]
     
     
@@ -32,12 +31,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         initNavigationBar()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        currentDictionary = unfilteredDictionary
+        tableView.reloadData()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         searchBar.endEditing(true)
-        currentDictionary = unfilteredDictionary
         searchBar.text = ""
-        tableView.reloadData()
-        
     }
     
     private func initNavigationBar(){
@@ -51,7 +52,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     //GetWords()
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searching = true
         guard !searchText.isEmpty else {
+            searching = false
             self.currentDictionary = self.unfilteredDictionary
             self.tableView.reloadData()
             return
@@ -73,6 +76,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     
     
+    
     // UITableView methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return currentDictionary.count
@@ -89,15 +93,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        currentWord = currentDictionary[indexPath.row].word
-        currentSynonyms = currentDictionary[indexPath.row].synonyms
         currentIndex = indexPath.row
         performSegue(withIdentifier: "detailview", sender: self)
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if(searching){
+            let emptyAction = UISwipeActionsConfiguration()
+            return emptyAction
+        }
         let addAction = UIContextualAction(style: .normal, title:  "Add", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-            self.currentWord = self.currentDictionary[indexPath.row].word
             self.currentIndex = indexPath.row
             self.initAddAlert(title: "Add a new word to the dictionary", message: "")
             success(true)
@@ -107,10 +112,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if(searching){
+            let emptyAction = UISwipeActionsConfiguration()
+            return emptyAction
+        }
         let deleteAction = UIContextualAction(style: .normal, title:  "Delete", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-            self.currentWord = self.currentDictionary[indexPath.row].word
             self.currentIndex = indexPath.row
-            self.initDeleteAlert(word: self.currentDictionary[indexPath.row].word)
+            self.initDeleteAlert(word: self.currentDictionary[indexPath.row].word, id: self.currentDictionary[indexPath.row].id)
             success(true)
         })
         deleteAction.backgroundColor = .red
@@ -127,10 +135,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { (_) in
             if let field = alertController.textFields?[0] {
-                
-                
-                
-                
                 let uuid = NSUUID().uuidString.lowercased()
                 let item:DictionaryItem = DictionaryItem(word: field.text!, id: uuid, synonyms: ["< add - delete >"])
                 self.currentDictionary.append(item)
@@ -149,12 +153,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.present(alertController, animated: true, completion: nil)
     }
     
-    private func initDeleteAlert(word: String){
+    private func initDeleteAlert(word: String, id: String){
         let alert = UIAlertController(title: "Do you want to delete the word " + word + "?", message: "", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
-            self.currentDictionary.remove(at: self.currentIndex)
-            self.unfilteredDictionary = self.currentDictionary
-            self.tableView.reloadData()
+            self.removeItem(id: id)
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
             print("action canceled")
@@ -169,8 +171,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "detailview") {
             if let detailView = segue.destination as? DetailView {
-                detailView.word = currentWord
-                detailView.synonyms = currentSynonyms
+                detailView.dictionaryItem = self.currentDictionary[currentIndex]
                 detailView.textAttributes = textAttributes
                 detailView.updateDataBase = updateDataBase(_:)
                 let backItem = UIBarButtonItem()
@@ -184,10 +185,20 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         initAddAlert(title: "Add a new word to the dictionary", message: "")
     }
     
-    func updateDataBase(_ synonyms:[String]) -> () {
-        currentDictionary[currentIndex].synonyms = synonyms
+    func removeItem(id: String){
+        if let index = currentDictionary.enumerated().filter( { $0.element.id == id }).map({ $0.offset }).first {
+            currentDictionary.remove(at: index)
+        }
         unfilteredDictionary = currentDictionary
         tableView.reloadData()
+    }
+    
+    func updateDataBase(_ dictionaryItem:DictionaryItem) -> () {
+        if let index = currentDictionary.enumerated().filter( { $0.element.id == dictionaryItem.id }).map({ $0.offset }).first {
+            currentDictionary[index] = dictionaryItem
+            unfilteredDictionary = currentDictionary
+            tableView.reloadData()
+        }
     }
     
     override func didReceiveMemoryWarning() {
